@@ -1,0 +1,50 @@
+name: Deploy Google Apps Script
+
+on:
+  push:
+    branches:
+      - master 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install clasp globally
+        run: npm install -g @google/clasp
+
+      - name: Setup clasp credentials
+        run: |
+          echo '{
+            "token": {
+              "access_token": "${{ secrets.CLASP_ACCESS_TOKEN }}",
+              "refresh_token": "${{ secrets.CLASP_REFRESH_TOKEN }}",
+              "scope": "https://www.googleapis.com/auth/script.projects https://www.googleapis.com/auth/drive",
+              "token_type": "Bearer",
+              "id_token": "",
+              "expiry_date": 9999999999999
+            },
+            "oauth2ClientSettings": {
+              "clientId": "${{ secrets.CLASP_CLIENT_ID }}",
+              "clientSecret": "${{ secrets.CLASP_CLIENT_SECRET }}",
+              "redirectUri": "urn:ietf:wg:oauth:2.0:oob"
+            },
+            "isLocalCreds": false
+          }' > ~/.clasprc.json
+
+      - name: Setup .clasp.json with scriptId
+        run: |
+          echo '{
+            "scriptId": "${{ secrets.CLASP_SCRIPT_ID }}"
+          }' > ./expense_tracker/.clasp.json
+
+      - name: Push to Google Apps Script
+        run: clasp push -f --cwd ./expense_tracker
