@@ -4,6 +4,7 @@ function importNotionCleanByMonth() {
     Logger.log("Script stopped: Not allowed to run between 12 AM and 8 AM.");
     return;
   }
+
   const notionToken = getSecrets("notion_token");
   const databaseId = getSecrets("debit");
   const notionUrl = `https://api.notion.com/v1/databases/${databaseId}/query`;
