@@ -4,5 +4,5 @@ A workflow to keep track of daily expenses using Apple Shortcuts, Notion, Google
 
 ## Local Commands:
 > clasp pull : import changes from AppScript.  
-> clasp push : push changes to AppScript. 
+> clasp push : push changes to AppScript.  
 > clasp run <function_name> : execute function in AppScript.
